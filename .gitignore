@@ -1,0 +1,51 @@
+# ===========================
+# Compiled & Build Output
+# ===========================
+build/
+out/
+*.class
+*.jar
+*.war
+*.ear
+
+# ===========================
+# Gradle
+# ===========================
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# ===========================
+# IntelliJ IDEA
+# ===========================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ===========================
+# Secrets & Environment
+# ===========================
+env/
+*.env
+.env*
+application-secret.yml
+application-local.yml
+
+# ===========================
+# Logs
+# ===========================
+logs/
+*.log
+
+# ===========================
+# OS
+# ===========================
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Spring Boot
+# ===========================
+target/
