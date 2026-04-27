@@ -1,5 +1,6 @@
 package com.link_organizer.domain.shared_folders.dto;
 
+import com.link_organizer.common.enums.FolderMemberRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Builder
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class SharedFoldersResponseDto {
 
   private Long folder_id;
@@ -19,5 +19,6 @@ public class SharedFoldersResponseDto {
 
   private String description;
 
+  private FolderMemberRole folderMemberRole;
 
 }

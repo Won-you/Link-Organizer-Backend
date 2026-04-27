@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,6 +19,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "shared_folders")
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SharedFolders {
 
   @Id
@@ -40,8 +44,10 @@ public class SharedFolders {
   @Column(nullable = false)
   private LocalDateTime updated_at;
 
-
-
-
+  public void update(String name, String color, String description) {
+    this.name = name;
+    this.color = color;
+    this.description = description;
+  }
 
 }
