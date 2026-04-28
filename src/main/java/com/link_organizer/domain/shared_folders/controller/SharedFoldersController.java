@@ -6,6 +6,7 @@ import com.link_organizer.domain.shared_folders.dto.SharedFoldersRequestDto;
 import com.link_organizer.domain.shared_folders.dto.SharedFoldersResponseDto;
 import com.link_organizer.domain.shared_folders.entity.SharedFolders;
 import com.link_organizer.domain.shared_folders.service.SharedFoldersService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Slice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,13 +32,13 @@ public class SharedFoldersController {
   }
 
   @GetMapping("/{folderId}")
-  public ApiResponse<SharedFolders> getSharedFolder(@PathVariable Long folderId){
-    SharedFolders response=sharedFoldersService.getFolderDetail(folderId);
+  public ApiResponse<SharedFoldersResponseDto> getSharedFolder(@PathVariable Long folderId){
+    SharedFoldersResponseDto response=sharedFoldersService.getFolderDetail(folderId);
     return ApiResponse.success(response);
   }
 
   @PostMapping("/add")
-  public ApiResponse<String> addFolder(@RequestBody SharedFoldersRequestDto request) {
+  public ApiResponse<String> addFolder(@Valid @RequestBody SharedFoldersRequestDto request) {
     sharedFoldersService.addFolder(request);
     return ApiResponse.success("success");
   }

@@ -31,9 +31,28 @@ public class SharedFoldersService {
     return sharedFoldersRepository.findAllByAccountId(account.getAccountId(), pagingDto.getKeyword(), pagingDto.toPageable());
   }
 
-  public SharedFolders getFolderDetail(Long folderId) {
-    return sharedFoldersRepository.findById(folderId)
+  ///  폴더 세부사항 조회
+  @Transactional(readOnly = true)
+  public SharedFoldersResponseDto  getFolderDetail(Long folderId) {
+    Accounts account = getLoginAccount();
+    
+    ///  멤버인지 검증
+    FolderMemberId memberId = new FolderMemberId(folderId, account.getAccountId());
+    FolderMembers member=folderMembersRepository.findById(memberId)
+            .orElseThrow(() -> new IllegalArgumentException("No Permission"));
+    
+    
+    SharedFolders folder= sharedFoldersRepository.findById(folderId)
         .orElseThrow(() -> new IllegalArgumentException("Not Found FolderId"));
+    
+    return SharedFoldersResponseDto.builder()
+            .folder_id(folder.getFolder_id())
+            .name(folder.getName())
+            .color(folder.getColor())
+            .description(folder.getDescription())
+            .folderMemberRole(member.getRole())
+            .build();
+
   }
 
   @Transactional
@@ -74,24 +93,29 @@ public class SharedFoldersService {
         throw new IllegalArgumentException("No Permission");
       }
 
-      SharedFolders sharedFolders= sharedFoldersRepository.findById(folderId)
-          .orElseThrow(()-> new IllegalArgumentException("Not Found FolderId"));
+//      SharedFolders sharedFolders= sharedFoldersRepository.findById(folderId)
+//          .orElseThrow(()-> new IllegalArgumentException("Not Found FolderId"));
 
-      sharedFolders.update(request.getName(),request.getColor(),request.getDescription());
+      member.getSharedFolder().update(request.getName(),request.getColor(),request.getDescription());
 
   }
 
   @Transactional
   public void deleteFolder(Long folderId) {
     Accounts account=getLoginAccount();
+    
+    ///  삭제 권한 여부 확인
     FolderMemberId memberId=new FolderMemberId(folderId,account.getAccountId());
     FolderMembers folderMembers=folderMembersRepository.findById(memberId)
         .orElseThrow(()->new IllegalArgumentException("No Permission, Not Found Member"));
+    if(folderMembers.getRole()!=FolderMemberRole.OWNER){
+      throw new IllegalArgumentException("Only the owner can delete this.");
+    }
+    folderMembersRepository.deleteById(memberId);
+    
     SharedFolders sharedFolder=sharedFoldersRepository.findById(folderId)
         .orElseThrow(()-> new IllegalArgumentException("Not Found Folder"));
-
     sharedFoldersRepository.delete(sharedFolder);
-
   }
 
   private Accounts getLoginAccount() {
