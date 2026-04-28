@@ -16,6 +16,7 @@ public class GoogleTokenVerifier {
     private final GoogleIdTokenVerifier verifier;
 
     public GoogleTokenVerifier(@Value("${google.client-id}") String clientId) {
+//        log.info("google : {}",clientId);
         this.verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
                 .setAudience(Collections.singletonList(clientId))
                 .build();
@@ -29,7 +30,8 @@ public class GoogleTokenVerifier {
             }
             return googleIdToken.getPayload();
         } catch (Exception e) {
-            log.error("Google ID Token 검증 실패: {}", e.getMessage());
+            log.error("Google ID Token 검증 실패: {} | 예외 타입: {}",
+                e.getMessage(), e.getClass().getName(), e);
             throw new IllegalArgumentException("Google ID Token 검증에 실패했습니다.");
         }
     }
