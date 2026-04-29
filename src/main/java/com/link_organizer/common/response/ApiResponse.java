@@ -18,16 +18,16 @@ public class ApiResponse<T> {
 
   Boolean result;
   Error error;
-  T message;
+  T data;
 
   public static <T> ApiResponse<T> success() {
     return success(null);
   }
 
-  public static <T> ApiResponse<T> success(T message) {
+  public static <T> ApiResponse<T> success(T data) {
     return ApiResponse.<T>builder()
         .result(true)
-        .message(message)
+        .data(data)
         .build();
   }
 
