@@ -4,7 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import java.util.Collections;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,9 +15,11 @@ public class GoogleTokenVerifier {
 
     private final GoogleIdTokenVerifier verifier;
 
-    public GoogleTokenVerifier(@Value("${google.client-id}") String clientId) {
+    public GoogleTokenVerifier(@Value("${google.client-id.ios}") String iosClientId,
+        @Value("${google.client-id.android}") String androidClientId,
+        @Value("${google.client-id.web}") String webClientId) {
         this.verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
-                .setAudience(Collections.singletonList(clientId))
+                .setAudience(List.of(iosClientId, androidClientId, webClientId))
                 .build();
     }
 
@@ -29,7 +31,8 @@ public class GoogleTokenVerifier {
             }
             return googleIdToken.getPayload();
         } catch (Exception e) {
-            log.error("Google ID Token 검증 실패: {}", e.getMessage());
+            log.error("Google ID Token 검증 실패: {} | 예외 타입: {}",
+                e.getMessage(), e.getClass().getName(), e);
             throw new IllegalArgumentException("Google ID Token 검증에 실패했습니다.");
         }
     }
