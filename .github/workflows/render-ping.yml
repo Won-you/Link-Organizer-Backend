@@ -1,0 +1,16 @@
+name: Render Server Keep Alive
+
+on:
+  schedule:
+    # 14분마다 실행 (Render 무료 티어 15분 제한 방지)
+    - cron: '*/14 * * * *'
+#  # (선택) 수동으로도 실행해볼 수 있게 버튼을 만듭니다.
+#  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a request to the health check endpoint
+        run: |
+          curl -s https://link-organizer-backend-public.onrender.com/api/health
